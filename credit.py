@@ -4,7 +4,11 @@ Student: Qixian Aiden Wang, Zhiquan Yang (Gary)
 Date: Oct. 16, 2022
 """
 
-# You should modify initialize()
+'''
+Initialize all global variables required for the simulator
+No parameter
+No Return
+'''
 def initialize():
     global owed_list, month_owed_interest_list
     global last_update_month
@@ -24,6 +28,13 @@ def initialize():
     disable_flag = False
     prev_country_flag = 1 
 
+'''
+Update the % interest each purchase owes for each month
+Parameter: 
+  month - an integer indicating what month is the update happening on
+        - assume the input is a valid month number
+No returns
+'''
 def update_owed(month):
     global owed_list, month_owed_interest_list
     global last_update_month
@@ -38,9 +49,18 @@ def update_owed(month):
             month_owed_interest_list[i] += month-last_update_month
 
     last_update_month = month
-    
-    return
 
+"""
+Check if date 1 is the same or later than date 2
+Parameter:
+  day1 - an integer represent the day of date 1
+  month1 - an integer represent the month of date 1
+  day2 - an integer represent the day of date 2
+  month2 - an integer represent the month of date 2
+  All input of the parameters are assumed to be valid
+Return True iff date 1 occurs on the same or later than date 2
+Otherwise, Return False
+"""
 def date_same_or_later(day1, month1, day2, month2):
     if month1 > month2:
         return True
@@ -49,13 +69,32 @@ def date_same_or_later(day1, month1, day2, month2):
             return True
     else:
         return False
-    
+
+'''
+Check if the given 3 countries are different
+Parameter:
+  c1, c2, c3 - a string each representing a country
+  Assumes the parameter inputs are valid country names 
+Return True iff all 3 countries are different from each other
+'''
 def all_three_different(c1, c2, c3):
     if c1 != c2 and c2 != c3 and c1 != c3:
         return True
     else:
         return False
-        
+
+'''
+Make a purchase of inputted amount and update this purchase to owing list
+Parameter:
+  amount - a float representing the purchased amount
+  day - an integer representing the day of purchase
+  month - an integer representing the month of purchase
+  country - a string representing the country of purchase
+Return the string "error" if an action later than inputted date already exist
+Return the string "error" if the 3 consecutive purchases 
+                          were made at 3 different countries
+Return the string "error" if the account is already disabled
+'''
 def purchase(amount, day, month, country):
     global owed_list, month_owed_interest_list
     global last_update_month
@@ -93,7 +132,15 @@ def purchase(amount, day, month, country):
 
     prev_day = day
     prev_month = month 
-    
+
+'''
+Calcualte and return the amount of money owed based on the current date
+Parameter:
+  day - an integer representing the day of checking
+  month - an integer representing the month of checking
+Return the string "error" if an action later than inputted date already exist
+Otherwise, Return the total money owed of this account
+'''
 def amount_owed(day, month):
     global owed_list, month_owed_interest_list
     global last_update_month
@@ -118,7 +165,16 @@ def amount_owed(day, month):
             total_owed += \
                 owed_list[i] * ((1.05)**(month_owed_interest_list[i]))
     return total_owed
-    
+
+'''
+Pays the bill by the inputted amount
+Parameter:
+  amount - a float representing the money wished to pay back
+  day - an integer representing the day of paying
+  month - an integer representing the month of paying
+Return the string "error" if an action later than inputted date already exist
+Return the string "error" if too much money is paid
+'''
 def pay_bill(amount, day, month):
     global owed_list, month_owed_interest_list
     global last_update_month
