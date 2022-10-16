@@ -1,44 +1,73 @@
-"""The Credit Card Simulator starter code
-You should complete every incomplete function,
-and add more functions and variables as needed.
-Ad comments as required.
-
-Note that incomplete functions have 'pass' as the first statement:
-pass is a Python keyword; it is a statement that does nothing.
-This is a placeholder that you should remove once you modify the function.
-
-Author: Michael Guerzhoy.  Last modified: Oct. 3, 2022
+"""
+The Credit Card Simulator Project
+Student: Qixian Aiden Wang, Gary Z
+Date: Oct. 16, 2022
 """
 
 # You should modify initialize()
 def initialize():
-    global cur_balance_owing_intst, cur_balance_owing_recent
-    global last_update_day, last_update_month
-    global last_country, last_country2
-    
-    cur_balance_owing_intst = 0
-    cur_balance_owing_recent = 0
-    
-    last_update_day, last_update_month = -1, -1
-    
-    last_country = None
-    last_country2 = None    
-    
-    MONTHLY_INTEREST_RATE = 0.05
+    global owing_list
+    global prev_day, prev_month
+    global prev_country1, prev_country2
+    global disable_flag, prev_country_flag
+
+    owing_list = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    prev_day = 0
+    prev_month = 0
+    prev_country1 = None
+    prev_country2 = None
+    disable_flag = False
+    prev_country_flag = 1 
 
 def date_same_or_later(day1, month1, day2, month2):
-    pass
+    if month1 > month2:
+        return True
+    elif month1 == month2:
+        if day1 >= day2:
+            return True
+        else:
+            return False
+    else:
+        return False
     
 def all_three_different(c1, c2, c3):
-    pass
-        
-    
+    if c1 != c2 and c2 != c3 and c1 != c3:
+        return True
+    else:
+        return False
         
 def purchase(amount, day, month, country):
-    pass
+    if disable_flag:
+        return "error"
+    
+    if not date_same_or_later(day, month, prev_day, prev_month):
+        disable_flag = True
+        return "error"
+    
+    if not all_three_different(country, prev_country1, prev_country2):
+        disable_flag = True
+        return "error"
+  
+    if prev_country_flag == 1:
+        prev_country1 = country
+        prev_country_flag = 2
+    else:
+        prev_country2 = country
+        prev_country_flag = 1
+
+    prev_day = day
+    prev_month = month
+
+    owing_list[month-1] = amount
     
 def amount_owed(day, month):
-    pass
+    owned = 0
+    for i in range(month):
+        month_diff = month - (i + 1)
+        if month_diff < 2:
+            owned += owing_list[i]
+        else:
+            owned += owing_list[i] * ((1.05)**(month_diff-1))
     
 def pay_bill(amount, day, month):
     pass
