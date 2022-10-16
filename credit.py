@@ -51,11 +51,6 @@ def date_same_or_later(day1, month1, day2, month2):
         return False
     
 def all_three_different(c1, c2, c3):
-    global purchase_count
-
-    if purchase_count < 3:
-        return False
-
     if c1 != c2 and c2 != c3 and c1 != c3:
         return True
     else:
@@ -78,9 +73,10 @@ def purchase(amount, day, month, country):
         return "error"
     
     purchase_count += 1
-    if all_three_different(country, prev_country1, prev_country2):
-        disable_flag = True
-        return "error"
+    if purchase_count >= 3:
+        if all_three_different(country, prev_country1, prev_country2):
+            disable_flag = True
+            return "error"
   
     
 
@@ -163,6 +159,7 @@ def pay_bill(amount, day, month):
 initialize()		
     
 if __name__ == '__main__':
+
     initialize()
     print("Prof's Test Case")
     purchase(80, 8, 1, "Canada")
