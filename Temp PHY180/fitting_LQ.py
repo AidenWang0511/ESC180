@@ -66,6 +66,9 @@ highlighted by comments that look like:
 
 def main():
     my_func = quadratic
+    #my_func = exponential
+    #my_func = powerlaw
+
     # Change to whichever of the 5 functions you want to fit
 
     plt.rcParams.update({'font.size': 14})
@@ -87,6 +90,9 @@ def main():
 ########### HERE!!! ##############
 
     init_guess = (0,0,0)
+    #init_guess = (10,100)
+    #init_guess = (1,0.5)
+
     # Your initial guess of (a, tau, T, phi)
     # For sinusoidal functions, guessing T correctly is critically important
     # Note: your initial guess must have the same number of parameters as
