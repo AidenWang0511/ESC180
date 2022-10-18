@@ -54,6 +54,7 @@ def quadratic(t, a, b, c):
     return a*t**2 + b*t + c
 
 def powerlaw(t, a, b):
+    print(f"a: {a}, exponent: {b}")
     return a*t**b
 """
 The above five functions should be all you need for PHY180
@@ -86,7 +87,7 @@ def main():
 
 ########### HERE!!! ##############
 
-    init_guess = (0.5)
+    init_guess = (2, 0.5)
     # Your initial guess of (a, tau, T, phi)
     # For sinusoidal functions, guessing T correctly is critically important
     # Note: your initial guess must have the same number of parameters as
@@ -133,9 +134,9 @@ def main():
     # Prints a box using what's in the "label" strings in the previous two lines.
     # loc specifies the location
 
-    ax1.set_xlabel("Initial Angle (rad)")
+    ax1.set_xlabel("Length of Pendulum (m)")
     ax1.set_ylabel("Period (s)")
-    ax1.set_title("Relationship between Period(s) and Initial Angle(rad) of a Pendulum of Length 40cm")
+    ax1.set_title("Relationship between Period(s) and Length of a Pendulum")
     # Here is where you change how your graph is labelled.
 
     #ax1.set_xscale('log')
@@ -160,7 +161,7 @@ def main():
     ax2.axhline(y=0, color="black")
     # Plot the y=0 line for context.
 
-    ax2.set_xlabel("Initial Angle (rad)")
+    ax2.set_xlabel("Length of Pendulum (m)")
     ax2.set_ylabel("Period (s)")
     ax2.set_title("Residuals of the fit")
     # Here is where you change how your graph is labelled.

@@ -22,7 +22,7 @@ function).
 If you want to change the file name, that's the next line below this comment.
 """
 
-filename="mydata_quad.txt"
+filename="mydata2_LQ.txt"
 """
 Change this if your filename is different.
 
@@ -50,10 +50,10 @@ def quadratic(t, a, b, c):
     print("a:",a)
     print("b:",b)
     print("c:",c)
-
     return a*t**2 + b*t + c
 
 def powerlaw(t, a, b):
+    print(f"a: {a}, exponent: {b}")
     return a*t**b
 """
 The above five functions should be all you need for PHY180
@@ -65,7 +65,7 @@ highlighted by comments that look like:
 """
 
 def main():
-    my_func = linear
+    my_func = quadratic
     # Change to whichever of the 5 functions you want to fit
 
     plt.rcParams.update({'font.size': 14})
@@ -86,7 +86,7 @@ def main():
 
 ########### HERE!!! ##############
 
-    init_guess = (0, 1.269)
+    init_guess = (0,0,0)
     # Your initial guess of (a, tau, T, phi)
     # For sinusoidal functions, guessing T correctly is critically important
     # Note: your initial guess must have the same number of parameters as
