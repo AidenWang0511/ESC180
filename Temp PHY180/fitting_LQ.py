@@ -35,6 +35,7 @@ filename="C:\\Users\\Brian\\PHY224\\mydata.txt"
 import scipy.optimize as optimize
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 from pylab import loadtxt
 
 def damped_sinusoid(t, a, tau, T, phi):
@@ -55,6 +56,10 @@ def quadratic(t, a, b, c):
 def powerlaw(t, a, b):
     print(f"a: {a}, exponent: {b}")
     return a*t**b
+
+def Q_fit(t, a, tau):
+    return a*tau/np.sqrt(t)
+
 """
 The above five functions should be all you need for PHY180
 The first line in main() is where you choose which function you want to use
@@ -65,7 +70,7 @@ highlighted by comments that look like:
 """
 
 def main():
-    my_func = quadratic
+    my_func = Q_fit
     #my_func = exponential
     #my_func = powerlaw
 
@@ -89,7 +94,7 @@ def main():
 
 ########### HERE!!! ##############
 
-    init_guess = (0,0,0)
+    init_guess = (1,1)
     #init_guess = (10,100)
     #init_guess = (1,0.5)
 
