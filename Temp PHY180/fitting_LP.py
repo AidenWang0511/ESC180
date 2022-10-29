@@ -34,6 +34,7 @@ filename="C:\\Users\\Brian\\PHY224\\mydata.txt"
 
 import scipy.optimize as optimize
 import numpy as np
+import math
 import matplotlib.pyplot as plt
 from pylab import loadtxt
 
@@ -44,6 +45,7 @@ def exponential(t, a, tau):
     return a*np.exp(-t/tau)
 
 def linear(t, m, b):
+    print(f"m: {m}, b: {b}")
     return m*t+b
 
 def quadratic(t, a, b, c):
@@ -54,7 +56,6 @@ def quadratic(t, a, b, c):
     return a*t**2 + b*t + c
 
 def powerlaw(t, a, b):
-    print(f"a: {a}, exponent: {b}")
     return a*t**b
 """
 The above five functions should be all you need for PHY180
@@ -66,7 +67,7 @@ highlighted by comments that look like:
 """
 
 def main():
-    my_func = powerlaw
+    my_func = linear
     # Change to whichever of the 5 functions you want to fit
 
     plt.rcParams.update({'font.size': 14})
@@ -78,6 +79,11 @@ def main():
     # Load file, take columns 0 & 1 & 2 & 3, skip 1 row, unpack means
     # the data points are line by line instead of line 2 being all x values
     # and line 3 being all the y values, etc.
+    #'''
+    for i in range(len(data[1])):
+        data[1][i] = np.log(data[1][i])
+        data[0][i] = np.log(data[0][i])
+    #'''
 
     xdata = data[0]
     ydata = data[1]
@@ -87,7 +93,7 @@ def main():
 
 ########### HERE!!! ##############
 
-    init_guess = (2, 0.5)
+    init_guess = (0.5, 0.3)
     # Your initial guess of (a, tau, T, phi)
     # For sinusoidal functions, guessing T correctly is critically important
     # Note: your initial guess must have the same number of parameters as

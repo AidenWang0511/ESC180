@@ -70,7 +70,7 @@ highlighted by comments that look like:
 """
 
 def main():
-    my_func = Q_fit
+    my_func = quadratic
     #my_func = exponential
     #my_func = powerlaw
 
@@ -94,7 +94,7 @@ def main():
 
 ########### HERE!!! ##############
 
-    init_guess = (1,1)
+    init_guess = (1,1,1)
     #init_guess = (10,100)
     #init_guess = (1,0.5)
 
@@ -110,12 +110,12 @@ def main():
 
     a=popt[0]
     tau=popt[1]
-    # T=popt[2]
+    T=popt[2]
     # phi=popt[3]
     # best fit values are named nicelye
     u_a=pcov[0,0]**(0.5)
     u_tau=pcov[1,1]**(0.5)
-    # u_T=pcov[2,2]**(0.5)
+    u_T=pcov[2,2]**(0.5)
     # u_phi=pcov[3,3]**(0.5)
     # uncertainties of fit are named nicely
 
@@ -144,8 +144,8 @@ def main():
     # Prints a box using what's in the "label" strings in the previous two lines.
     # loc specifies the location
 
-    ax1.set_xlabel("Q factor")
-    ax1.set_ylabel("Length of Pendulum (m)")
+    ax1.set_xlabel("Length of Pendulum (m)")
+    ax1.set_ylabel("Q factor")
     ax1.set_title("Relationship between the Q Factor and Pendulum's Length'")
     # Here is where you change how your graph is labelled.
 
@@ -157,7 +157,7 @@ def main():
 
     print("A:", a, "+/-", u_a)
     print("tau:", tau, "+/-", u_tau)
-    # print("T:", T, "+/-", u_T)
+    print("T:", T, "+/-", u_T)
     # print("phi:", phi, "+/-", u_phi)
     # prints the various values with uncertainties
     # This is printed to your screen, not on the graph.
@@ -171,8 +171,8 @@ def main():
     ax2.axhline(y=0, color="black")
     # Plot the y=0 line for context.
 
-    ax2.set_xlabel("Q factor")
-    ax2.set_ylabel("Length of Pendulum (m)")
+    ax2.set_xlabel("Length of Pendulum (m)")
+    ax2.set_ylabel("Q factor")
     ax2.set_title("Residuals of the fit")
     # Here is where you change how your graph is labelled.
 
