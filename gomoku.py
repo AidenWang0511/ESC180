@@ -9,6 +9,28 @@ This is a placeholder that you should remove once you modify the function.
 Author(s): Michael Guerzhoy with tests contributed by Siavash Kazemian.  Last modified: Oct. 28, 2022
 """
 
+def is_sq_in_board(board, y, x):
+    if y >= len(board) or y < 0 or x >= len(board[0]) or x < 0:
+        return False
+    return True
+
+def is_sequence_complete(board, col, y_start, x_start, length, d_y, d_x):
+    if is_sq_in_board(board, y_start-d_y, x_start-d_x):
+        if board[y_start-d_y][x_start-d_x] == col
+            return False
+    
+    for i in range(length):
+        if is_sq_in_board(board, y_start + i*d_y, x_start + i*d_x):
+            if board[y_start+i*d_y][x_start+i*d_x] != col:
+                return False
+    
+    if is_sq_in_board(board, y_start + (length-1)*d_y, x_start + (length-1)*d_x):
+        if board[y_start + length*d_y][x_start + length*d_y] == col:
+            return False
+    
+    return True
+
+
 def is_empty(board):
     pass
     
