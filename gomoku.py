@@ -1,12 +1,7 @@
-"""Gomoku starter code
-You should complete every incomplete function,
-and add more functions and variables as needed.
-
-Note that incomplete functions have 'pass' as the first statement:
-pass is a Python keyword; it is a statement that does nothing.
-This is a placeholder that you should remove once you modify the function.
-
-Author(s): Michael Guerzhoy with tests contributed by Siavash Kazemian.  Last modified: Oct. 28, 2022
+"""
+Gomoku Game Project
+Author(s): Aiden Wang and Gary Yang.  
+Date: Nov. 10, 2022
 """
 
 def is_sq_in_board(board, y, x):
@@ -16,7 +11,7 @@ def is_sq_in_board(board, y, x):
 
 def is_sequence_complete(board, col, y_start, x_start, length, d_y, d_x):
     if is_sq_in_board(board, y_start-d_y, x_start-d_x):
-        if board[y_start-d_y][x_start-d_x] == col
+        if board[y_start-d_y][x_start-d_x] == col:
             return False
     
     for i in range(length):
@@ -24,29 +19,107 @@ def is_sequence_complete(board, col, y_start, x_start, length, d_y, d_x):
             if board[y_start+i*d_y][x_start+i*d_x] != col:
                 return False
     
-    if is_sq_in_board(board, y_start + (length-1)*d_y, x_start + (length-1)*d_x):
+    if is_sq_in_board(board, y_start + length*d_y, x_start + length*d_x):
         if board[y_start + length*d_y][x_start + length*d_y] == col:
             return False
-    
     return True
 
-
 def is_empty(board):
-    pass
-    
+    for r in range(len(board)):
+        for c in range(len(board[0])):
+            if board[r][c] != " ":
+                return False
+    return True
     
 def is_bounded(board, y_end, x_end, length, d_y, d_x):
-    pass
+    color = board[y_end][x_end]
+    start_bound = False
+    end_bound = False
+    if is_sq_in_board(board, y_end-length*d_y, x_end-length*d_x):
+        if board[y_end - length*d_y][x_end - length*d_x] == color:
+            start_bound = True
+        else:
+            start_bound = False
+    else:
+        start_bound = False
+    if is_sq_in_board(board, y_end + d_y, x_end + d_x):
+        if board[y_end + d_y][x_end + d_x] == color:
+            end_bound = True
+        else:
+            end_bound = False
+    else:
+        end_bound = False
+    
+    if start_bound and end_bound:
+        return "OPEN"
+    elif start_bound or end_bound:
+        return "SEMIOPEN"
+    else:
+        return "CLOSED"
     
 def detect_row(board, col, y_start, x_start, length, d_y, d_x):
+    open_seq_count = 0
+    semi_open_seq_count = 0
+    while is_sq_in_board(board, y_start, x_start):
+        if is_sequence_complete(board, col, y_start, x_start, length, d_y, d_x):
+            if is_bounded(board, y_start + (length-1)*d_y, x_start + (length-1)*d_x, length, d_y, d_x) == "OPEN":
+                open_seq_count += 1
+            elif is_bounded(board, y_start + (length-1)*d_y, x_start + (length-1)*d_x, length, d_y, d_x) == "SEMIOPEN":
+                semi_open_seq_count += 1
+        y_start += d_y
+        x_start += d_x
     return open_seq_count, semi_open_seq_count
     
 def detect_rows(board, col, length):
     ####CHANGE ME
     open_seq_count, semi_open_seq_count = 0, 0
+    
+    temp_tulp = detect_row(board, col, 0, 0, length, 1, 0)
+    open_seq_count += temp_tulp[0]
+    semi_open_seq_count += temp_tulp[1]
+    temp_tulp = detect_row(board, col, 0, 0, length, 0, 1)
+    open_seq_count += temp_tulp[0]
+    semi_open_seq_count += temp_tulp[1]
+    temp_tulp = detect_row(board, col, 0, 0, length, 1, 1)
+    open_seq_count += temp_tulp[0]
+    semi_open_seq_count += temp_tulp[1]
+    
+    for r in range(1, len(board)):
+        temp_tulp = detect_row(board, col, r, 0, length, -1, 1)
+        open_seq_count += temp_tulp[0]
+        semi_open_seq_count += temp_tulp[1]
+        temp_tulp = detect_row(board, col, r, 0, length, 0, 1)
+        open_seq_count += temp_tulp[0]
+        semi_open_seq_count += temp_tulp[1]
+        temp_tulp = detect_row(board, col, r, 0, length, 1, 1)
+        open_seq_count += temp_tulp[0]
+        semi_open_seq_count += temp_tulp[1]
+        
+    for c in range(1, len(board[0])):
+        temp_tulp = detect_row(board, col, 0, c, length, 1, 0)
+        open_seq_count += temp_tulp[0]
+        semi_open_seq_count += temp_tulp[1]
+        temp_tulp = detect_row(board, col, 0, c, length, 1, 1)
+        open_seq_count += temp_tulp[0]
+        semi_open_seq_count += temp_tulp[1]
+        temp_tulp = detect_row(board, col, len(board)-1, c, length, -1, 1)
+        open_seq_count += temp_tulp[0]
+        semi_open_seq_count += temp_tulp[1]
+        
     return open_seq_count, semi_open_seq_count
     
 def search_max(board):
+    move_y, move_x = -1, -1
+    max_score_track = -10000
+    for r in range(len(board)):
+        for c in range(len(board[0])):
+            if board[r][c] == " ":
+                board[r][c] = "b"
+                temp_score = score(board)
+                if temp_score > max_score_track:
+                    move_y, move_x = r, c
+                    max_score_track = temp_score
+                board[r][c] = " "
     return move_y, move_x
     
 def score(board):
@@ -79,8 +152,21 @@ def score(board):
 
     
 def is_win(board):
-    pass
-
+    full_flag = True
+    for r in range(len(board)):
+        for c in range(len(board[0])):
+            if board[r][c] == " ":
+                full_flag = False
+    if full_flag:
+        return "Draw"
+    black = detect_rows(board, "b", 5)
+    white = detect_rows(board, "w", 5)
+    if (black[0] + black[1]) > 0:
+        return "Black won"
+    elif (white[0] + white[1]) > 0:
+        return "White won"
+    else:
+        return  "Continue playing"
 
 def print_board(board):
     
@@ -269,6 +355,7 @@ def some_tests():
     #       Semi-open rows of length 4: 0
     #       Open rows of length 5: 0
     #       Semi-open rows of length 5: 0
+    
     
     y = 3; x = 5; d_x = -1; d_y = 1; length = 2
     
