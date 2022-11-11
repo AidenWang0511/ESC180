@@ -1,14 +1,34 @@
 """
 Gomoku Game Project
 Author(s): Aiden Wang and Gary Yang.  
-Date: Nov. 10, 2022
+Date: Nov. 15, 2022
 """
 
+'''
+check if a sqare is within boundary of board
+Parameter:
+    board - nested 2D list storing the game board
+    y - row # of the sqare
+    x - column # of the sqare
+return True if within board, False otherwise
+'''
 def is_sq_in_board(board, y, x):
     if y >= len(board) or y < 0 or x >= len(board[0]) or x < 0:
         return False
     return True
 
+'''
+check if a sequence is complete
+Parameter:
+    board - nested 2D list storing the game board
+    col - color of sequence to check
+    y_start - starting position of seq for row
+    x_start - starting position of seq for column
+    length - length of sequence to check
+    d_y - row direction
+    d_x - column direction
+return True if sequence is complete given the parameters, False otherwise
+'''
 def is_sequence_complete(board, col, y_start, x_start, length, d_y, d_x):
     if is_sq_in_board(board, y_start-d_y, x_start-d_x):
         if board[y_start-d_y][x_start-d_x] == col:
@@ -26,15 +46,33 @@ def is_sequence_complete(board, col, y_start, x_start, length, d_y, d_x):
             return False
     return True
 
-
+'''
+check if a board is completely empty
+Parameter:
+    board - nested 2D list storing the game board
+return True if the board is completely empty, False otherwise
+'''
 def is_empty(board):
     for r in range(len(board)):
         for c in range(len(board[0])):
             if board[r][c] != " ":
                 return False
     return True
-    
+
+'''
+check if a sequence is complete
+Parameter:
+    board - nested 2D list storing the game board
+    y_end - ending position of seq for row
+    x_end - ending position of seq for column
+    length - length of sequence to check
+    d_y - row direction
+    d_x - column direction
+return OPEN if sequence is not bounded, SEMIOPEN if half bounded, CLOSED if bounded on both side
+'''
 def is_bounded(board, y_end, x_end, length, d_y, d_x):
+    global closed_seq_5
+    closed_seq_5 = 0
     color = board[y_end][x_end]
     start_bound = False
     end_bound = False
@@ -54,19 +92,31 @@ def is_bounded(board, y_end, x_end, length, d_y, d_x):
         end_bound = True
     
     if start_bound and end_bound:
+        if length == 5:
+            closed_seq_5 = 1
         return "CLOSED"
     elif start_bound or end_bound:
         return "SEMIOPEN"
     else:
         return "OPEN"
-    
+
+'''
+return a tuple with # of open seq and # of semi closed seq given condition
+Parameter:
+    board - nested 2D list storing the game board
+    col - color of sequence to detect
+    y_start - starting position of seq for row
+    x_start - starting position of seq for column
+    length - length of sequence to detect
+    d_y - row direction
+    d_x - column direction
+return a tuple following the description of this function
+'''
 def detect_row(board, col, y_start, x_start, length, d_y, d_x):
     open_seq_count = 0
     semi_open_seq_count = 0
     while is_sq_in_board(board, y_start, x_start):
         if is_sequence_complete(board, col, y_start, x_start, length, d_y, d_x):
-            if length == 5:
-                open_seq_count += 1
             if is_bounded(board, y_start + (length-1)*d_y, x_start + (length-1)*d_x, length, d_y, d_x) == "OPEN":
                 open_seq_count += 1
                 
@@ -75,9 +125,16 @@ def detect_row(board, col, y_start, x_start, length, d_y, d_x):
         y_start += d_y
         x_start += d_x
     return open_seq_count, semi_open_seq_count
-    
+
+'''
+return a tuple with # of open seq and # of semi closed seq of the entire board
+Parameter:
+    board - nested 2D list storing the game board
+    col - color of sequence to detect
+    length - length of sequence to detect
+return a tuple following the description of this function
+'''
 def detect_rows(board, col, length):
-    ####CHANGE ME
     open_seq_count, semi_open_seq_count = 0, 0
     
     temp_tulp = detect_row(board, col, 0, 0, length, 1, 0)
@@ -114,6 +171,12 @@ def detect_rows(board, col, length):
         
     return open_seq_count, semi_open_seq_count
     
+'''
+return a tuple the most optimal move for pc to win(rely on the score() function)
+Parameter:
+    board - nested 2D list storing the game board
+return a tuple with the most optimal move given the score() function
+'''
 def search_max(board):
     move_y, move_x, max_score_track = -1, -1, -1
     for r in range(len(board)):
@@ -161,8 +224,14 @@ def score(board):
             10   * semi_open_b[3]                +  
             open_b[2] + semi_open_b[2] - open_w[2] - semi_open_w[2])
 
-    
+'''
+return whether the current game status is white won, black won, draw, or continue playing
+Parameter:
+    board - nested 2D list storing the game board
+return a string based on curretn status of the game 
+'''
 def is_win(board):
+    global closed_seq_5
     full_flag = True
     for r in range(len(board)):
         for c in range(len(board[0])):
@@ -171,10 +240,12 @@ def is_win(board):
     if full_flag:
         return "Draw"
     black = detect_rows(board, "b", 5)
+    black_closed_5 = closed_seq_5
     white = detect_rows(board, "w", 5)
-    if (black[0] + black[1]) > 0:
+    white_closed_5 = closed_seq_5
+    if (black[0] + black[1] + black_closed_5) > 0:
         return "Black won"
-    elif (white[0] + white[1]) > 0:
+    elif (white[0] + white[1] + white_closed_5) > 0:
         return "White won"
     else:
         return  "Continue playing"
@@ -217,6 +288,8 @@ def analysis(board):
         
 
 def play_gomoku(board_size):
+    global closed_seq_5
+    closed_seq_5 = 0
     board = make_empty_board(board_size)
     board_height = len(board)
     board_width = len(board[0])
@@ -443,17 +516,4 @@ def some_tests():
   
             
 if __name__ == '__main__':
-    #play_gomoku(10)
-    board = make_empty_board(8)
-
-    board[0][5] = "w"
-    board[0][6] = "b"
-    y = 5; x = 2; d_x = 0; d_y = 1; length = 3
-    put_seq_on_board(board, 1, 0, 1, 0, 5, "w")
-    board[6][0] = "b"
-    board[0][0] = "b"
-    print_board(board)
-    analysis(board)
-    print(is_bounded(board, 5, 0, 5, 1, 0))
-    print(is_win(board))
-    
+    play_gomoku(8)
