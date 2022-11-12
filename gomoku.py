@@ -232,15 +232,10 @@ return a string based on curretn status of the game
 '''
 def is_win(board):
     global closed_seq_5
-    full_flag = True
-    for r in range(len(board)):
-        for c in range(len(board[0])):
-            if board[r][c] == " ":
-                full_flag = False
-    if full_flag:
-        return "Draw"
+    closed_seq_5 = 0
     black = detect_rows(board, "b", 5)
     black_closed_5 = closed_seq_5
+    closed_seq_5 = 0
     white = detect_rows(board, "w", 5)
     white_closed_5 = closed_seq_5
     if (black[0] + black[1] + black_closed_5) > 0:
@@ -248,6 +243,13 @@ def is_win(board):
     elif (white[0] + white[1] + white_closed_5) > 0:
         return "White won"
     else:
+        full_flag = True
+        for r in range(len(board)):
+            for c in range(len(board[0])):
+                if board[r][c] == " ":
+                    full_flag = False
+        if full_flag:
+            return "Draw"
         return  "Continue playing"
 
 def print_board(board):
