@@ -17,7 +17,7 @@ print(M)
 #M and x
 M = np.array([[1,-2,3],[3,10,1],[1,5,3]])
 x = np.array([75,10,-11])
-b = np.matmul(M,x)        
+b = np.matmul(M,x)
 
 print(M)
 #[[ 1 -2  3]
@@ -25,6 +25,6 @@ print(M)
 # [ 1  5  3]]
 
 # To obtain a list of lists from the array M, we use .tolist()
-M_listoflists = M.tolist() 
+M_listoflists = M.tolist()
 
 print(M_listoflists) #[[1, -2, 3], [3, 10, 1], [1, 5, 3]]
