@@ -68,7 +68,8 @@ Parameter:
     length - length of sequence to check
     d_y - row direction
     d_x - column direction
-return OPEN if sequence is not bounded, SEMIOPEN if half bounded, CLOSED if bounded on both side
+return OPEN if sequence is not bounded, SEMIOPEN if half bounded, 
+       CLOSED if bounded on both side
 '''
 def is_bounded(board, y_end, x_end, length, d_y, d_x):
     global closed_seq_5
@@ -117,10 +118,12 @@ def detect_row(board, col, y_start, x_start, length, d_y, d_x):
     semi_open_seq_count = 0
     while is_sq_in_board(board, y_start, x_start):
         if is_sequence_complete(board, col, y_start, x_start, length, d_y, d_x):
-            if is_bounded(board, y_start + (length-1)*d_y, x_start + (length-1)*d_x, length, d_y, d_x) == "OPEN":
+            if is_bounded(board, y_start + (length-1)*d_y, x_start \
+                + (length-1)*d_x, length, d_y, d_x) == "OPEN":
                 open_seq_count += 1
                 
-            elif is_bounded(board, y_start + (length-1)*d_y, x_start + (length-1)*d_x, length, d_y, d_x) == "SEMIOPEN":
+            elif is_bounded(board, y_start + (length-1)*d_y, x_start \
+                + (length-1)*d_x, length, d_y, d_x) == "SEMIOPEN":
                 semi_open_seq_count += 1
         y_start += d_y
         x_start += d_x
@@ -172,7 +175,8 @@ def detect_rows(board, col, length):
     return open_seq_count, semi_open_seq_count
     
 '''
-return a tuple the most optimal move for pc to win(rely on the score() function)
+return a tuple storing the most optimal move for pc to win
+        (rely on the score() function)
 Parameter:
     board - nested 2D list storing the game board
 return a tuple with the most optimal move given the score() function
@@ -225,7 +229,8 @@ def score(board):
             open_b[2] + semi_open_b[2] - open_w[2] - semi_open_w[2])
 
 '''
-return whether the current game status is white won, black won, draw, or continue playing
+return whether the current game status is white won, black won, draw, 
+        or continue playing
 Parameter:
     board - nested 2D list storing the game board
 return a string based on curretn status of the game 
