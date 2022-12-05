@@ -146,7 +146,7 @@ if __name__ == '__main__':
     fin = time.time()
     res = run_similarity_test("test.txt", sem_descriptors, cosine_similarity)
     print("time taken:", fin-st)
-    print(res, "of the guesses were correct")
+    print(res, "% of the guesses were correct")
 
 
 
