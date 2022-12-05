@@ -33,18 +33,82 @@ def build_semantic_descriptors(sentences):
             word = word.lower()
             if word not in sd.keys():
                 sd[word] = {}
-
-
-
-    pass
+            for w in l:
+                if w != word:
+                    if w not in sd[word].keys():
+                        sd[word][w] = 1
+                    else:
+                        sd[word][w] += 1
+    return sd
 
 def build_semantic_descriptors_from_files(filenames):
-    pass
+    txt = ""
+    for i in filenames:
+        txt += open(i, "r", encoding = "latin1").read() + " "
+
+    txt = txt.replace("!", ".")
+    txt = txt.replace("?", ".")
+    txt = txt.replace(",", " ")
+    txt = txt.replace("-", " ")
+    txt = txt.replace("--", " ")
+    txt = txt.replace(":", " ")
+    txt = txt.replace(";", " ")
+    txt = txt.replace("\n", " ")
+
+    txt = txt.split(".")
+    txt.pop()
+
+    for i in range(len(txt)):
+        txt[i] = txt[i].split(" ")
+        while "" in txt[i]:
+            txt[i].remove("")
+
+    return build_semantic_descriptors(txt)
 
 
 def most_similar_word(word, choices, semantic_descriptors, similarity_fn):
-    pass
+    res = choices[0]
+    word = word.lower()
+    maxSim = -10
+
+    if word not in semantic_descriptors:
+        return res
+
+    for i in range(len(choices)):
+        choices[i] = choices[i].lower()
+        simVal = -1
+        if choices[i] in semantic_descriptors:
+            simVal = similarity_fn(semantic_descriptors[word], semantic_descriptors[choices[i]])
+        if simVal > maxSim:
+            maxSim = simVal
+            res = choices[i]
+    return res
 
 
 def run_similarity_test(filename, semantic_descriptors, similarity_fn):
-    pass
+    numTrue = 0
+    f = open(filename, "r", encoding = "latin1").read()
+    f = f.split("\n")
+
+    questions = []
+    for q in f:
+        if q != "":
+            questions.append(q.split(" "))
+
+    for q in questions:
+        if most_similar_word(q[0], q[2:], semantic_descriptors, similarity_fn) == q[1]:
+            numTrue += 1
+
+    return numTrue / len(questions) * 100.0
+
+
+import time
+st = time.time()
+sem_descriptors = build_semantic_descriptors_from_files(["wp.txt", "sw.txt"])
+fin = time.time()
+res = run_similarity_test("test.txt", sem_descriptors, cosine_similarity)
+print("time taken:", fin-st)
+print(res, "of the guesses were correct")
+
+
+
