@@ -1,10 +1,9 @@
-'''Semantic Similarity: starter code
-
-Author: Michael Guerzhoy. Last modified: Nov. 18, 2022.
+'''
+Semantic Similarity
+Author: Qixian Aiden Wang, Gary Yang Last modified: Dec. 5, 2022.
 '''
 
 import math
-
 
 def norm(vec):
     '''Return the norm of a vector stored as a dictionary, as
@@ -34,6 +33,7 @@ def build_semantic_descriptors(sentences):
             if word not in sd.keys():
                 sd[word] = {}
             for w in l:
+                w = w.lower()
                 if w != word:
                     if w not in sd[word].keys():
                         sd[word][w] = 1
@@ -78,7 +78,8 @@ def most_similar_word(word, choices, semantic_descriptors, similarity_fn):
         choices[i] = choices[i].lower()
         simVal = -1
         if choices[i] in semantic_descriptors:
-            simVal = similarity_fn(semantic_descriptors[word], semantic_descriptors[choices[i]])
+            simVal = similarity_fn(semantic_descriptors[word], \
+                semantic_descriptors[choices[i]])
         if simVal > maxSim:
             maxSim = simVal
             res = choices[i]
@@ -96,19 +97,14 @@ def run_similarity_test(filename, semantic_descriptors, similarity_fn):
             questions.append(q.split(" "))
 
     for q in questions:
-        if most_similar_word(q[0], q[2:], semantic_descriptors, similarity_fn) == q[1]:
+        if most_similar_word(q[0], q[2:], semantic_descriptors, \
+            similarity_fn) == q[1]:
             numTrue += 1
 
     return numTrue / len(questions) * 100.0
 
 
-import time
-st = time.time()
-sem_descriptors = build_semantic_descriptors_from_files(["wp.txt", "sw.txt"])
-fin = time.time()
-res = run_similarity_test("test.txt", sem_descriptors, cosine_similarity)
-print("time taken:", fin-st)
-print(res, "of the guesses were correct")
+
 
 
 
