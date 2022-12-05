@@ -85,7 +85,8 @@ def build_semantic_descriptors_from_files(filenames):
     return build_semantic_descriptors(txt)
 
 '''
-From a list of words, find the word with largest semantic similarity to a given word
+From a list of words, find the word with largest semantic similarity 
+to a given word
 Parameters:
     word - the target word
     choices - list of possible similar words
@@ -140,7 +141,8 @@ def run_similarity_test(filename, semantic_descriptors, similarity_fn):
 
 if __name__ == '__main__':
     st = time.time()
-    sem_descriptors = build_semantic_descriptors_from_files(["wp.txt", "sw.txt"])
+    sem_descriptors = build_semantic_descriptors_from_files(["wp.txt", \
+        "sw.txt"])
     fin = time.time()
     res = run_similarity_test("test.txt", sem_descriptors, cosine_similarity)
     print("time taken:", fin-st)
