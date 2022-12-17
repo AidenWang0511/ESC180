@@ -40,17 +40,18 @@ return a dictionary representing the semantic descriptor given a passage
 def build_semantic_descriptors(sentences):
     sd = {}
     for l in sentences:
-        for word in l:
-            word = word.lower()
-            if word not in sd.keys():
-                sd[word] = {}
-            for w in l:
-                w = w.lower()
+        l = list(set(l))
+        for word in range(len(l)):
+            l[word] = l[word].lower()
+            if l[word] not in sd.keys():
+                sd[l[word]] = {}
+            for w in range(len(l)):
+                l[w] = l[w].lower()
                 if w != word:
-                    if w not in sd[word].keys():
-                        sd[word][w] = 1
+                    if l[w] not in sd[l[word]].keys():
+                        sd[l[word]][l[w]] = 1
                     else:
-                        sd[word][w] += 1
+                        sd[l[word]][l[w]] += 1
     return sd
 
 
@@ -85,7 +86,7 @@ def build_semantic_descriptors_from_files(filenames):
     return build_semantic_descriptors(txt)
 
 '''
-From a list of words, find the word with largest semantic similarity 
+From a list of words, find the word with largest semantic similarity
 to a given word
 Parameters:
     word - the target word
@@ -140,6 +141,7 @@ def run_similarity_test(filename, semantic_descriptors, similarity_fn):
 
 
 if __name__ == '__main__':
+    
     st = time.time()
     sem_descriptors = build_semantic_descriptors_from_files(["wp.txt", \
         "sw.txt"])
